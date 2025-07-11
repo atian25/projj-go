@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
+	"strings"
 
+	"github.com/atian25/projj-go/internal/config"
 	"github.com/urfave/cli/v3"
 )
 
@@ -63,36 +63,82 @@ func ConfigCommand() *cli.Command {
 
 func configGetAction(ctx context.Context, cmd *cli.Command) error {
 	key := cmd.String("key")
-	fmt.Printf("获取配置: %s\n", key)
-	// 这里可以实现实际的配置读取逻辑
-	fmt.Printf("配置值: (示例值)\n")
+	
+	cfg, err := config.Load()
+	if err != nil {
+		return fmt.Errorf("加载配置失败: %w", err)
+	}
+	
+	switch key {
+	case "base":
+		fmt.Printf("%s\n", cfg.Base)
+	case "change_directory":
+		fmt.Printf("%t\n", cfg.ChangeDirectory)
+	default:
+		return fmt.Errorf("未知的配置键: %s", key)
+	}
+	
 	return nil
 }
 
 func configSetAction(ctx context.Context, cmd *cli.Command) error {
 	key := cmd.String("key")
 	value := cmd.String("value")
-	fmt.Printf("设置配置: %s = %s\n", key, value)
-	// 这里可以实现实际的配置写入逻辑
-	fmt.Println("配置已保存")
+	
+	cfg, err := config.Load()
+	if err != nil {
+		return fmt.Errorf("加载配置失败: %w", err)
+	}
+	
+	switch key {
+	case "base":
+		cfg.Base = value
+	case "change_directory":
+		cfg.ChangeDirectory = strings.ToLower(value) == "true"
+	default:
+		return fmt.Errorf("未知的配置键: %s", key)
+	}
+	
+	if err := cfg.Save(); err != nil {
+		return fmt.Errorf("保存配置失败: %w", err)
+	}
+	
+	fmt.Printf("配置已保存: %s = %s\n", key, value)
 	return nil
 }
 
 func configListAction(ctx context.Context, cmd *cli.Command) error {
+	cfg, err := config.Load()
+	if err != nil {
+		return fmt.Errorf("加载配置失败: %w", err)
+	}
+	
 	fmt.Println("当前配置:")
-	fmt.Println("  user.name = 示例用户")
-	fmt.Println("  user.email = user@example.com")
-	// 这里可以实现实际的配置列表逻辑
+	fmt.Printf("  base = %s\n", cfg.Base)
+	fmt.Printf("  change_directory = %t\n", cfg.ChangeDirectory)
+	
+	if len(cfg.Hooks) > 0 {
+		fmt.Println("  hooks:")
+		for k, v := range cfg.Hooks {
+			fmt.Printf("    %s = %s\n", k, v)
+		}
+	}
+	
+	if len(cfg.PostAdd) > 0 {
+		fmt.Println("  postadd:")
+		for platform, userInfo := range cfg.PostAdd {
+			fmt.Printf("    %s:\n", platform)
+			for k, v := range userInfo {
+				fmt.Printf("      %s = %s\n", k, v)
+			}
+		}
+	}
+	
 	return nil
 }
 
 func configPathAction(ctx context.Context, cmd *cli.Command) error {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return fmt.Errorf("无法获取用户主目录: %w", err)
-	}
-	
-	configPath := filepath.Join(homeDir, ".projj-go", "config.yaml")
+	configPath := config.GetConfigPath()
 	fmt.Printf("配置文件路径: %s\n", configPath)
 	return nil
 }
