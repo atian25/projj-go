@@ -78,5 +78,11 @@ func findAction(ctx context.Context, cmd *cli.Command) error {
 		fmt.Println(output)
 	}
 	
+	// 如果启用了 change_directory 且只找到一个仓库，输出切换目录信息
+	config := client.GetConfig()
+	if config.ChangeDirectory && len(repos) == 1 && query != "" {
+		fmt.Printf("PROJJ_CHANGE_DIRECTORY=%s\n", repos[0].Path)
+	}
+	
 	return nil
 }

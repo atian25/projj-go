@@ -69,9 +69,14 @@ projj config get -k change_directory
 ## How It Works
 
 1. The wrapper intercepts `projj` commands
-2. When you run `projj add <repository-url>`, it executes the original command
+2. When you run `projj add <repository-url>` or `projj find <query>`, it executes the original command
 3. If the command succeeds and `change_directory` is enabled, projj outputs a special line: `PROJJ_CHANGE_DIRECTORY=/path/to/repo`
 4. The wrapper detects this line and automatically changes to that directory
+
+### Supported Commands
+
+- **`projj add`**: Always changes directory after successfully adding a repository
+- **`projj find`**: Changes directory when exactly one repository matches the query
 
 ## Example Usage
 

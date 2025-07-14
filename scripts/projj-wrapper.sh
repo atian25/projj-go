@@ -27,8 +27,8 @@ projj() {
     # Print the output
     echo "$output"
     
-    # Check if this was an 'add' command and if change_directory is enabled
-    if [[ $exit_code -eq 0 && "$1" == "add" ]]; then
+    # Check if this was an 'add' or 'find' command and if change_directory is enabled
+    if [[ $exit_code -eq 0 && ("$1" == "add" || "$1" == "find") ]]; then
         # Look for the special PROJJ_CHANGE_DIRECTORY line in output
         local change_dir
         change_dir=$(echo "$output" | grep "^PROJJ_CHANGE_DIRECTORY=" | cut -d'=' -f2-)

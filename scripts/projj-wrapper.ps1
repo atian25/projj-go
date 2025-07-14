@@ -32,8 +32,8 @@ function projj {
     # Print the output
     $output | ForEach-Object { Write-Host $_ }
     
-    # Check if this was an 'add' command and if change_directory is enabled
-    if ($exitCode -eq 0 -and $Arguments.Length -gt 0 -and $Arguments[0] -eq "add") {
+    # Check if this was an 'add' or 'find' command and if change_directory is enabled
+    if ($exitCode -eq 0 -and $Arguments.Length -gt 0 -and ($Arguments[0] -eq "add" -or $Arguments[0] -eq "find")) {
         # Look for the special PROJJ_CHANGE_DIRECTORY line in output
         $changeDirLine = $output | Where-Object { $_ -match "^PROJJ_CHANGE_DIRECTORY=" }
         

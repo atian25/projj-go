@@ -80,6 +80,8 @@ make run
 
 ### 使用示例
 
+**添加仓库时自动切换目录：**
+
 ```bash
 # 添加仓库前，你在任意目录
 $ pwd
@@ -94,6 +96,23 @@ Changing directory to: /Users/username/Workspaces/coding/github.com/golang/go
 # 自动切换到仓库目录
 $ pwd
 /Users/username/Workspaces/coding/github.com/golang/go
+```
+
+**查找仓库时自动切换目录：**
+
+```bash
+# 查找仓库前，你在任意目录
+$ pwd
+/Users/username/Documents
+
+# 查找唯一匹配的仓库
+$ projj find gin
+1. gin-gonic/gin (/Users/username/Workspaces/coding/github.com/gin-gonic/gin)
+Changing directory to: /Users/username/Workspaces/coding/github.com/gin-gonic/gin
+
+# 自动切换到仓库目录
+$ pwd
+/Users/username/Workspaces/coding/github.com/gin-gonic/gin
 ```
 
 ### 支持的 Shell
