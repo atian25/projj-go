@@ -1,14 +1,17 @@
 # projj-go
 
-一个用 Go 语言编写的 CLI 程序示例，使用 [urfave/cli](https://github.com/urfave/cli) 库构建。
+一个用 Go 语言编写的项目管理工具，兼容原版 Node.js projj 的数据格式和功能。
 
 ## 功能特性
 
-- 使用 urfave/cli v3 库进行命令行参数解析
-- 内置帮助和版本信息
-- 支持子命令和标志参数
-- 可扩展的命令系统
-- 使用 Makefile 简化构建流程
+- 🚀 **仓库管理**: 添加、移除、查找和列出 Git 仓库
+- 📁 **自动目录切换**: 支持添加仓库后自动切换到仓库目录（跨平台）
+- 🔧 **配置管理**: 完整的配置系统，支持获取、设置和列出配置
+- 🔍 **智能搜索**: 支持按名称、路径、平台等多种方式搜索仓库
+- 📊 **缓存同步**: 自动同步本地仓库缓存
+- 🔄 **向下兼容**: 完全兼容原版 projj 的配置文件和缓存格式
+- 🌐 **跨平台**: 支持 macOS、Linux 和 Windows
+- 🐚 **多 Shell 支持**: 支持 Bash、Zsh、Fish 和 PowerShell
 
 ## 快速开始
 
@@ -44,6 +47,63 @@ make build
 ```bash
 make run
 ```
+
+## 自动切换目录功能
+
+`projj-go` 支持在添加仓库后自动切换到仓库目录，类似于原版 Node.js projj 的功能。
+
+### 启用自动切换目录
+
+1. **设置配置**:
+   ```bash
+   projj config set -k change_directory -v true
+   ```
+
+2. **安装 Shell 包装脚本**:
+   ```bash
+   # 自动安装（推荐）
+   ./scripts/install-wrapper.sh
+   
+   # 或手动安装
+   # Bash/Zsh:
+   echo 'source "/path/to/projj-go/scripts/projj-wrapper.sh"' >> ~/.bashrc
+   # Fish:
+   cp scripts/projj-wrapper.fish ~/.config/fish/functions/projj.fish
+   # PowerShell:
+   echo '. "/path/to/projj-go/scripts/projj-wrapper.ps1"' >> $PROFILE
+   ```
+
+3. **重新加载 Shell 配置**:
+   ```bash
+   source ~/.bashrc  # 或 ~/.zshrc
+   ```
+
+### 使用示例
+
+```bash
+# 添加仓库前，你在任意目录
+$ pwd
+/Users/username/Documents
+
+# 添加仓库
+$ projj add golang/go
+正在克隆 https://github.com/golang/go.git 到 /Users/username/Workspaces/coding/github.com/golang/go...
+仓库添加成功: /Users/username/Workspaces/coding/github.com/golang/go
+Changing directory to: /Users/username/Workspaces/coding/github.com/golang/go
+
+# 自动切换到仓库目录
+$ pwd
+/Users/username/Workspaces/coding/github.com/golang/go
+```
+
+### 支持的 Shell
+
+- **Bash** (Linux, macOS, Windows WSL)
+- **Zsh** (Linux, macOS, Windows WSL)
+- **Fish** (Linux, macOS, Windows WSL)
+- **PowerShell** (Windows, Linux, macOS)
+
+详细说明请参考 [`scripts/README.md`](scripts/README.md)。
 
 ## 可用命令
 

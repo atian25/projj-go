@@ -104,6 +104,12 @@ func (c *Client) Add(repoURL string) error {
 	}
 	
 	fmt.Printf("仓库添加成功: %s\n", targetPath)
+	
+	// 如果启用了 change_directory，输出特殊格式的路径信息供 shell 包装函数使用
+	if c.config.ChangeDirectory {
+		fmt.Printf("PROJJ_CHANGE_DIRECTORY=%s\n", targetPath)
+	}
+	
 	return nil
 }
 
